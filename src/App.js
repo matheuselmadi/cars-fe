@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import VehicleList from './VehicleList';
-import CarForm from './CarForm';
+
+import VehicleList from './components/VehicleList';
+import CarForm from './components/CarForm';
+
+import "./App.css";
 
 function App() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false); // Estado para controlar a exibição do formulário
 
   useEffect(() => {
     // Faça uma solicitação ao backend para obter os dados dos veículos
@@ -19,21 +23,34 @@ function App() {
       });
   }, []);
 
+  // const handleNewCarClick = () => {
+  //   setShowForm(true); // Quando o botão "Novo Carro" é clicado, exibe o formulário
+  // };
+
   // Função para lidar com a adição de um novo carro
   const handleAddCar = (newCar) => {
     // Atualize a lista de veículos com o novo carro
     setVehicles([...vehicles, newCar]);
+    setShowForm(false);
   };
 
   if (loading) {
-    return <div>Carregando...</div>;
+    return <div className="loading-container">
+      <div className="loading">Carregando</div>
+    </div>;
   }
 
   return (
-    <div className="App">
+    <div className="app">
       <h1>Lista de Veículos Agrupada por Marca</h1>
-      <CarForm onAddCar={handleAddCar} />
-      <VehicleList vehicles={vehicles} />
+      {!showForm && (
+        <button onClick={() => setShowForm(true)}>Novo Veículo</button>
+      )}
+      {showForm ? (
+        <CarForm onAddCar={handleAddCar} setShowForm={setShowForm} />
+      ) : (
+        <VehicleList vehicles={vehicles} />
+      )}
     </div>
   );
 }
