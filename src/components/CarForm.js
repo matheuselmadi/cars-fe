@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function CarForm({ setShowForm }) {
+function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
   const [formData, setFormData] = useState({
     ano: '',
     combustivel: 'FLEX',
@@ -10,6 +10,12 @@ function CarForm({ setShowForm }) {
   });
 
   const [modelos, setModelos] = useState([]);
+  const [formValid, setFormValid] = useState(false);
+  const [errors, setErrors] = useState({
+    ano: '',
+    cor: '',
+    modelo_id: '',
+  });
 
   useEffect(() => {
     // Busque a lista de modelos do backend
@@ -21,6 +27,25 @@ function CarForm({ setShowForm }) {
       .catch(error => console.error('Erro ao buscar modelos:', error));
   }, []);
 
+  useEffect(() => {
+    if (vehicleToEdit) {
+      // Preencha o formulário com os dados do veículo a ser editado
+      setFormData({
+        ano: vehicleToEdit.ano,
+        combustivel: vehicleToEdit.combustivel,
+        num_portas: vehicleToEdit.num_portas,
+        cor: vehicleToEdit.cor,
+        modelo_id: vehicleToEdit.modelo_id,
+      });
+    }
+  }, [vehicleToEdit]);
+
+  useEffect(() => {
+    // Verifique se todos os campos obrigatórios estão preenchidos
+    const isFormValid = Object.values(formData).every(value => value !== '');
+    setFormValid(isFormValid);
+  }, [formData]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -29,35 +54,69 @@ function CarForm({ setShowForm }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Gere a data atual no formato adequado
-    const dataCadastro = new Date().toISOString();
+    if (formValid) {
+      // Gere a data atual no formato adequado
+      const dataCadastro = new Date().toISOString();
 
-    // Crie o objeto do novo carro
-    const novoCarro = {
-      ano: formData.ano,
-      combustivel: formData.combustivel,
-      cor: formData.cor,
-      modelo_id: formData.modelo_id,
-      num_portas: formData.num_portas,
-      timestamp_cadastro: dataCadastro,
-    };
+      // Crie o objeto do novo carro
+      const novoCarro = {
+        ano: formData.ano,
+        combustivel: formData.combustivel,
+        cor: formData.cor,
+        modelo_id: formData.modelo_id,
+        num_portas: formData.num_portas,
+        timestamp_cadastro: dataCadastro,
+      };
 
-    // Envie a solicitação POST para criar o novo carro
-    fetch('http://localhost:8080/cars', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(novoCarro),
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Novo carro criado com sucesso:', data);
+      if (vehicleToEdit) {
 
-        window.location.reload();
+        const editCarro = {
+          ...novoCarro,
+          id: vehicleToEdit.id
+        };
 
-      })
-      .catch(error => console.error('Erro ao criar novo carro:', error));
+        // Se estiver em modo de edição, envie uma solicitação PUT para atualizar o veículo
+        fetch(`http://localhost:8080/cars/${vehicleToEdit.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editCarro),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Veículo atualizado com sucesso:', data);
+            // onAddCar(data); // Atualize o veículo na lista
+            setShowForm(false); // Saia do modo de edição
+            window.location.reload();
+          })
+          .catch((error) => console.error('Erro ao atualizar o veículo:', error));
+      } else {
+
+        // Envie a solicitação POST para criar o novo carro
+        fetch('http://localhost:8080/cars', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(novoCarro),
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Novo carro criado com sucesso:', data);
+            window.location.reload();
+          })
+          .catch(error => console.error('Erro ao criar novo carro:', error));
+      }
+    } else {
+      // Se o formulário não for válido, exiba mensagens de erro
+      const newErrors = {
+        ano: formData.ano ? '' : 'Campo obrigatório *',
+        cor: formData.cor ? '' : 'Campo obrigatório *',
+        modelo_id: formData.modelo_id ? '' : 'Campo obrigatório *',
+      };
+      setErrors(newErrors);
+    }
   };
 
   const handleCancel = () => {
@@ -66,9 +125,10 @@ function CarForm({ setShowForm }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Cadastro de Veículo</h2>
+      <h2>{vehicleToEdit ? 'Editar Veículo' : 'Cadastro de Veículo'}</h2>
       <div>
         <label>Ano:</label>
+        <div className="error">{errors.ano}</div>
         <input
           type="number"
           name="ano"
@@ -100,6 +160,7 @@ function CarForm({ setShowForm }) {
       </div>
       <div>
         <label>Cor:</label>
+        <div className="error">{errors.cor}</div>
         <input
           type="text"
           name="cor"
@@ -109,6 +170,7 @@ function CarForm({ setShowForm }) {
       </div>
       <div>
         <label>Modelo:</label>
+        <div className="error">{errors.modelo_id}</div>
         <select
           name="modelo_id"
           value={formData.modelo_id}
@@ -121,7 +183,7 @@ function CarForm({ setShowForm }) {
         </select>
       </div>
       <button className="cancel" type="button" onClick={handleCancel}>Cancelar</button>
-      <button className="new" type="submit">Adicionar Carro</button>
+      <button className="new" type="submit">{vehicleToEdit ? 'Salvar Alterações' : 'Adicionar Carro'}</button>
     </form>
   );
 }

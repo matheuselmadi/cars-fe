@@ -1,7 +1,7 @@
 import React from 'react';
 import VehicleTable from './VehicleTable';
 
-function VehicleList({ vehicles }) {
+function VehicleList({ vehicles, onEdit }) {
   // Função para agrupar veículos por marca
   const groupVehiclesByBrand = (vehicles) => {
     return vehicles.reduce((grouped, vehicle) => {
@@ -22,7 +22,7 @@ function VehicleList({ vehicles }) {
       {Object.entries(groupedVehicles).map(([brand, brandVehicles]) => (
         <div key={brand}>
           <h2>{`Marca: ${brand}`}</h2>
-          <VehicleTable vehicles={brandVehicles} />
+          <VehicleTable vehicles={brandVehicles} onEdit={onEdit} />
         </div>
       ))}
     </div>

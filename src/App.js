@@ -9,6 +9,7 @@ function App() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false); // Estado para controlar a exibição do formulário
+  const [editingVehicle, setEditingVehicle] = useState(null);
 
   useEffect(() => {
     // Faça uma solicitação ao backend para obter os dados dos veículos
@@ -28,10 +29,30 @@ function App() {
   // };
 
   // Função para lidar com a adição de um novo carro
+  // const handleAddCar = (newCar) => {
+  //   // Atualize a lista de veículos com o novo carro
+  //   setVehicles([...vehicles, newCar]);
+  //   setShowForm(false);
+  // };
+
   const handleAddCar = (newCar) => {
-    // Atualize a lista de veículos com o novo carro
-    setVehicles([...vehicles, newCar]);
-    setShowForm(false);
+    if (editingVehicle) {
+      // Atualize o veículo existente na lista
+      setVehicles((prevVehicles) =>
+        prevVehicles.map((vehicle) =>
+          vehicle.id === newCar.id ? newCar : vehicle
+        )
+      );
+      setEditingVehicle(null);
+    } else {
+      // Adicione o novo veículo à lista
+      setVehicles([...vehicles, newCar]);
+    }
+  };
+
+  const handleEdit = (vehicle) => {
+    setEditingVehicle(vehicle);
+    setShowForm(true);
   };
 
   if (loading) {
@@ -47,9 +68,9 @@ function App() {
         <button onClick={() => setShowForm(true)}>Novo Veículo</button>
       )}
       {showForm ? (
-        <CarForm onAddCar={handleAddCar} setShowForm={setShowForm} />
+        <CarForm onAddCar={handleAddCar} setShowForm={setShowForm} vehicleToEdit={editingVehicle} />
       ) : (
-        <VehicleList vehicles={vehicles} />
+        <VehicleList vehicles={vehicles} onEdit={handleEdit} />
       )}
     </div>
   );

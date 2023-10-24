@@ -1,6 +1,6 @@
 import React from 'react';
 
-function VehicleTable({ vehicles }) {
+function VehicleTable({ vehicles, onEdit }) {
   return (
     <table className="vehicle-list">
       <thead>
@@ -12,6 +12,7 @@ function VehicleTable({ vehicles }) {
           <th>Portas</th>
           <th>Cor</th>
           <th>Valor</th>
+          <th>Ação</th>
         </tr>
       </thead>
       <tbody>
@@ -24,6 +25,9 @@ function VehicleTable({ vehicles }) {
             <td>{vehicle.num_portas}</td>
             <td>{vehicle.cor}</td>
             <td>{vehicle.valor}</td>
+            <td>
+              <button onClick={() => onEdit(vehicle)}>Editar Veículo</button>
+            </td>
           </tr>
         ))}
       </tbody>
