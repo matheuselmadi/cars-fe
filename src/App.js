@@ -65,7 +65,7 @@ function App() {
     <div className="app">
       <h1>Lista de Veículos Agrupada por Marca</h1>
       {!showForm && (
-        <button onClick={() => setShowForm(true)}>Novo Veículo</button>
+        <button onClick={() => { setShowForm(true); setEditingVehicle(null); }}>Novo Veículo</button>
       )}
       {showForm ? (
         <CarForm onAddCar={handleAddCar} setShowForm={setShowForm} vehicleToEdit={editingVehicle} />

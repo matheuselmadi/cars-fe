@@ -26,7 +26,7 @@ function VehicleTable({ vehicles, onEdit }) {
             <td>{vehicle.cor}</td>
             <td>{vehicle.valor}</td>
             <td>
-              <button onClick={() => onEdit(vehicle)}>Editar Veículo</button>
+              <button onClick={() => onEdit(vehicle)}>Editar</button>
             </td>
           </tr>
         ))}

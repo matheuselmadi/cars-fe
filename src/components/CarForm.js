@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+import ModelForm from './ModelForm';
+
 function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
   const [formData, setFormData] = useState({
     ano: '',
@@ -16,6 +18,8 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
     cor: '',
     modelo_id: '',
   });
+
+  const [showModelForm, setShowModelForm] = useState(false);
 
   useEffect(() => {
     // Busque a lista de modelos do backend
@@ -119,6 +123,22 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
     }
   };
 
+  const handleDelete = () => {
+    if (window.confirm('Tem certeza de que deseja excluir este veículo?')) {
+      if (vehicleToEdit) {
+        fetch(`http://localhost:8080/cars/${vehicleToEdit.id}`, {
+          method: 'DELETE',
+        })
+          .then(() => {
+            console.log('Veículo excluído com sucesso');
+            setShowForm(false);
+            window.location.reload();
+          })
+          .catch((error) => console.error('Erro ao excluir veículo:', error));
+      }
+    }
+  };
+
   const handleCancel = () => {
     setShowForm(false); // Oculta o formulário quando o botão "Cancelar" é clicado
   };
@@ -182,8 +202,16 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
           ))}
         </select>
       </div>
-      <button className="cancel" type="button" onClick={handleCancel}>Cancelar</button>
-      <button className="new" type="submit">{vehicleToEdit ? 'Salvar Alterações' : 'Adicionar Carro'}</button>
+      <div className="button-container">
+        {vehicleToEdit
+          ? <button className="cancel" type="button" onClick={handleDelete}>Excluir Veículo</button>
+          : <button type="button" onClick={() => { setShowModelForm(true); }}>Novo Modelo</button>}
+        <div className="button-container right">
+          <button className="cancel" type="button" onClick={handleCancel}>Cancelar</button>
+          <button className="new" type="submit">{vehicleToEdit ? 'Salvar Alterações' : 'Adicionar Carro'}</button>
+        </div>
+      </div>
+      {showModelForm && (<ModelForm />)}
     </form>
   );
 }

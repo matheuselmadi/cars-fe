@@ -115,3 +115,8 @@ select {
   color: red;
   font-size: 12px;
 }
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+}
