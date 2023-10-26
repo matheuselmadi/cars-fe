@@ -20,6 +20,7 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
   });
 
   const [showModelForm, setShowModelForm] = useState(false);
+  const [showCarForm, setShowCarForm] = useState(true);
 
   useEffect(() => {
     // Busque a lista de modelos do backend
@@ -53,6 +54,30 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleNewModelClick = () => {
+    setShowCarForm(false);
+    setShowModelForm(true);
+  };
+
+  const handleNewModelClose = () => {
+    setShowModelForm(false);
+    setShowCarForm(true);
+  };
+
+  const handleModelSave = () => {
+    // Faça uma nova solicitação GET para a lista de modelos para atualizá-la
+    fetch('http://localhost:8080/modelo')
+      .then(response => response.json())
+      .then(data => {
+        setModelos(data);
+      })
+      .catch(error => console.error('Erro ao buscar modelos:', error));
+
+    // Restaure o formulário de veículo e oculte o formulário de modelo
+    setShowModelForm(false);
+    setShowCarForm(true);
   };
 
   const handleSubmit = (e) => {
@@ -144,75 +169,81 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>{vehicleToEdit ? 'Editar Veículo' : 'Cadastro de Veículo'}</h2>
-      <div>
-        <label>Ano:</label>
-        <div className="error">{errors.ano}</div>
-        <input
-          type="number"
-          name="ano"
-          value={formData.ano}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Combustível:</label>
-        <select
-          name="combustivel"
-          value={formData.combustivel}
-          onChange={handleInputChange}
-        >
-          <option value="FLEX">FLEX</option>
-          <option value="ALCOOL">ÁLCOOL</option>
-          <option value="GASOLINA">GASOLINA</option>
-          <option value="DIESEL">DIESEL</option>
-        </select>
-      </div>
-      <div>
-        <label>Número de Portas:</label>
-        <input
-          type="number"
-          name="num_portas"
-          value={formData.num_portas}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Cor:</label>
-        <div className="error">{errors.cor}</div>
-        <input
-          type="text"
-          name="cor"
-          value={formData.cor}
-          onChange={handleInputChange}
-        />
-      </div>
-      <div>
-        <label>Modelo:</label>
-        <div className="error">{errors.modelo_id}</div>
-        <select
-          name="modelo_id"
-          value={formData.modelo_id}
-          onChange={handleInputChange}
-        >
-          <option value="">Selecione um modelo</option>
-          {modelos.map(modelo => (
-            <option key={modelo.id} value={modelo.id}>{modelo.nome}</option>
-          ))}
-        </select>
-      </div>
-      <div className="button-container">
-        {vehicleToEdit
-          ? <button className="cancel" type="button" onClick={handleDelete}>Excluir Veículo</button>
-          : <button type="button" onClick={() => { setShowModelForm(true); }}>Novo Modelo</button>}
-        <div className="button-container right">
-          <button className="cancel" type="button" onClick={handleCancel}>Cancelar</button>
-          <button className="new" type="submit">{vehicleToEdit ? 'Salvar Alterações' : 'Adicionar Carro'}</button>
-        </div>
-      </div>
-      {showModelForm && (<ModelForm />)}
-    </form>
+    <div>
+      {showCarForm ? (
+        <form onSubmit={handleSubmit}>
+          <h2>{vehicleToEdit ? 'Editar Veículo' : 'Cadastro de Veículo'}</h2>
+          <div>
+            <label>Ano:</label>
+            <div className="error">{errors.ano}</div>
+            <input
+              type="number"
+              name="ano"
+              value={formData.ano}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div>
+            <label>Combustível:</label>
+            <select
+              name="combustivel"
+              value={formData.combustivel}
+              onChange={handleInputChange}
+            >
+              <option value="FLEX">FLEX</option>
+              <option value="ALCOOL">ÁLCOOL</option>
+              <option value="GASOLINA">GASOLINA</option>
+              <option value="DIESEL">DIESEL</option>
+            </select>
+          </div>
+          <div>
+            <label>Número de Portas:</label>
+            <input
+              type="number"
+              name="num_portas"
+              value={formData.num_portas}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div>
+            <label>Cor:</label>
+            <div className="error">{errors.cor}</div>
+            <input
+              type="text"
+              name="cor"
+              value={formData.cor}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div>
+            <label>Modelo:</label>
+            <div className="error">{errors.modelo_id}</div>
+            <select
+              name="modelo_id"
+              value={formData.modelo_id}
+              onChange={handleInputChange}
+            >
+              <option value="">Selecione um modelo</option>
+              {modelos.map(modelo => (
+                <option key={modelo.id} value={modelo.id}>{modelo.nome}</option>
+              ))}
+            </select>
+          </div>
+          <div className="button-container">
+            {vehicleToEdit
+              ? <button className="cancel" type="button" onClick={handleDelete}>Excluir Veículo</button>
+              : <button type="button" onClick={handleNewModelClick}>Novo Modelo</button>}
+            <div className="button-container right">
+              <button className="cancel" type="button" onClick={handleCancel}>Cancelar</button>
+              <button className="new" type="submit">{vehicleToEdit ? 'Salvar Alterações' : 'Adicionar Carro'}</button>
+            </div>
+          </div>
+        </form>
+      ) : null}
+      {showModelForm && (
+        <ModelForm onCancel={handleNewModelClose} onSave={handleModelSave} />
+      )}
+    </div>
   );
 }
 
