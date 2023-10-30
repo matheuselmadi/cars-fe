@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     // Faça uma solicitação ao backend para obter os dados dos veículos
-    fetch('http://localhost:8080/cars/all')
+    fetch('http://18.228.118.142:8080/cars/all')
       .then((response) => response.json())
       .then((data) => {
         setVehicles(data);
@@ -23,17 +23,6 @@ function App() {
         console.error('Erro ao buscar os dados dos veículos:', error);
       });
   }, []);
-
-  // const handleNewCarClick = () => {
-  //   setShowForm(true); // Quando o botão "Novo Carro" é clicado, exibe o formulário
-  // };
-
-  // Função para lidar com a adição de um novo carro
-  // const handleAddCar = (newCar) => {
-  //   // Atualize a lista de veículos com o novo carro
-  //   setVehicles([...vehicles, newCar]);
-  //   setShowForm(false);
-  // };
 
   const handleAddCar = (newCar) => {
     if (editingVehicle) {

@@ -22,7 +22,7 @@ function ModelForm({ onCancel, onSave }) {
 
     useEffect(() => {
         // Busque a lista de marcas do backend
-        fetch('http://localhost:8080/marca')
+        fetch('http://18.228.118.142:8080/marca')
             .then(response => response.json())
             .then(data => {
                 setMarcas(data);
@@ -52,7 +52,7 @@ function ModelForm({ onCancel, onSave }) {
     };
 
     const handleMarcaSave = () => {
-        fetch('http://localhost:8080/marca')
+        fetch('http://18.228.118.142:8080/marca')
             .then(response => response.json())
             .then(data => {
                 setMarcas(data);
@@ -69,7 +69,7 @@ function ModelForm({ onCancel, onSave }) {
 
         if (formValid) {
             // Envie a solicitação POST para criar o novo modelo
-            fetch('http://localhost:8080/modelo', {
+            fetch('http://18.228.118.142:8080/modelo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
