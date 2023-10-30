@@ -4,8 +4,8 @@ Aplicação React que exibe uma listagem de veículos agrupada por marcas. Exibe
 
 ## Vercel
 
-Aplicação rodando no Vercel: [Cars](https://cars-fe.vercel.app/)\
-Obs: Ao acessar o vercel pode ser necessario clicar em continuar, em um aviso de segurança, devido ao certificado SSL gerado para o IP onde o Backend esta hospedao (instância EC2 AWS).
+Obs: Antes de acessar o vercel, [acesse o link do Backend](https://52.67.153.18:8443/cars/all), para prosseguir com o aviso de segurança devido ao certificado autoassinado SSL gerado para o IP onde o Backend esta hospedado (instância EC2 AWS). Se não fizer esta parte o aplicativo ficara carregando, pois emitira um erro de certificado não confiável.\
+Aplicação rodando no Vercel: [Cars](https://cars-fe.vercel.app/)
 
 ## Imagens
 
