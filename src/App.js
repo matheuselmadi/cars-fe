@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 
 import VehicleList from './components/VehicleList';
 import CarForm from './components/CarForm';
@@ -13,15 +14,14 @@ function App() {
 
   useEffect(() => {
     // Faça uma solicitação ao backend para obter os dados dos veículos
-    fetch('15.228.229.40:8080/cars/all')
-      .then((response) => response.json())
-      .then((data) => {
-        setVehicles(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar os dados dos veículos:', error);
-      });
+    const socket = io('52.67.153.18:8080/cars/all');
+    socket.on('data', (data) => {
+      setVehicles(data);
+      setLoading(false);
+    });
+    return () => {
+      socket.disconnect(); // Desconecte-se ao desmontar o componente
+    };
   }, []);
 
   const handleAddCar = (newCar) => {
