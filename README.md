@@ -2,6 +2,11 @@
 
 Aplicação React que exibe uma listagem de veículos agrupada por marcas. Exibe a listagem podendo editar ou excluir um veículo, faz a persistência de um novo carro, modelo e marca.
 
+## Vercel
+
+Aplicação rodando no Vercel: [Cars](https://cars-fe.vercel.app/)\
+Obs: Ao acessar o vercel pode ser necessario clicar em continuar, em um aviso de segurança, devido ao certificado SSL gerado para o IP onde o Backend esta hospedao (instância EC2 AWS).
+
 ## Imagens
 
 ![CarsHome](https://github.com/matheuselmadi/cars-fe/assets/62962528/7aafd76b-bc52-42fc-a953-ccb0ca2239e1)
@@ -13,7 +18,8 @@ Backend consumido pelo app: [Cars](https://github.com/matheuselmadi/cars).
 
 ## Documentação
 
-Documentação de uso VehicleList: [DocumentationVehicleList.md](https://github.com/matheuselmadi/cars-fe/blob/master/DocumentationVehicleList.md)
+Documentação de uso VehicleList: [DocumentationVehicleList.md](https://github.com/matheuselmadi/cars-fe/blob/master/DocumentationVehicleList.md)\
+Obs: É preciso alterar as URLs nos componentes de acordo com o seu servidor.
 
 ## Scripts Disponíveis
 
