@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     // Faça uma solicitação ao backend para obter os dados dos veículos
-    fetch('18.228.118.142:8080/cars/all')
+    fetch('15.228.229.40:8080/cars/all')
       .then((response) => response.json())
       .then((data) => {
         setVehicles(data);
