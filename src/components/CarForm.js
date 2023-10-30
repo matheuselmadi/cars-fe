@@ -24,7 +24,7 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
 
   useEffect(() => {
     // Busque a lista de modelos do backend
-    fetch('http://18.228.118.142:8080/modelo')
+    fetch('https://52.67.153.18:8443/modelo')
       .then(response => response.json())
       .then(data => {
         setModelos(data);
@@ -68,7 +68,7 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
 
   const handleModelSave = () => {
     // Faça uma nova solicitação GET para a lista de modelos para atualizá-la
-    fetch('http://18.228.118.142:8080/modelo')
+    fetch('https://52.67.153.18:8443/modelo')
       .then(response => response.json())
       .then(data => {
         setModelos(data);
@@ -105,7 +105,7 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
         };
 
         // Se estiver em modo de edição, envie uma solicitação PUT para atualizar o veículo
-        fetch(`http://18.228.118.142:8080/cars/${vehicleToEdit.id}`, {
+        fetch(`https://52.67.153.18:8443/cars/${vehicleToEdit.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
       } else {
 
         // Envie a solicitação POST para criar o novo carro
-        fetch('http://18.228.118.142:8080/cars', {
+        fetch('https://52.67.153.18:8443/cars', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -151,7 +151,7 @@ function CarForm({ setShowForm, vehicleToEdit, onAddCar }) {
   const handleDelete = () => {
     if (window.confirm('Tem certeza de que deseja excluir este veículo?')) {
       if (vehicleToEdit) {
-        fetch(`http://18.228.118.142:8080/cars/${vehicleToEdit.id}`, {
+        fetch(`https://52.67.153.18:8443/cars/${vehicleToEdit.id}`, {
           method: 'DELETE',
         })
           .then(() => {

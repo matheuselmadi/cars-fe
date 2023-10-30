@@ -25,7 +25,7 @@ function BrandForm({ onCancel, onSave }) {
         e.preventDefault();
 
         if (formValid) {
-            fetch('http://18.228.118.142:8080/marca', {
+            fetch('https://52.67.153.18:8443/marca', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
