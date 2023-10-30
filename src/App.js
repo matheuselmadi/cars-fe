@@ -14,7 +14,7 @@ function App() {
 
   useEffect(() => {
     // Faça uma solicitação ao backend para obter os dados dos veículos
-    const socket = io('52.67.153.18:8080/cars/all');
+    const socket = io('http://52.67.153.18:8080/cars/all');
     socket.on('data', (data) => {
       setVehicles(data);
       setLoading(false);
